@@ -1,6 +1,7 @@
 var allMatchesURL = 'https://world-cup-json.herokuapp.com/matches'
 var todayMatchesURL = 'https://world-cup-json.herokuapp.com/matches/today'
 var groupResultsURL = 'https://world-cup-json.herokuapp.com/teams/group_results'
+var countryMatchesURL = 'https://world-cup-json.herokuapp.com/matches/country?fifa_code='
 
 var matchCard = Vue.component('match-card', {
   props: ['match'],
@@ -29,7 +30,7 @@ var matchCard = Vue.component('match-card', {
         <div class='text-center'>
           <h4>
             {{ match.away_team.country }}
-            <img class='pb-2' v-bind:src="getFlag(match.home_team.code)" v-bind:alt="match.home_team.code" v-bind:title="match.home_team.code">
+            <img class='pb-2' v-bind:src="getFlag(match.away_team.code)" v-bind:alt="match.away_team.code" v-bind:title="match.away_team.code">
           </h4>
         </div>
       </div>
@@ -120,6 +121,26 @@ var groupCard = Vue.component('group-card', {
   }
 });
 
+Vue.component("modal", {
+  template: `
+  <div class="modal fade" id="myModal" role="dialog">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Modal Header</h4>
+          </div>
+          <div class="modal-body">
+            <p>This is a small modal.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+  </div>
+  `
+  });
 
 var app = new Vue({
   el: '#app',
