@@ -12,7 +12,11 @@ var matchCard = Vue.component('match-card', {
     <div class='row'>
       <div class='col-md-12'>
         <h5>
-          <div class='text-center'>{{ match.location }} at {{ match.venue }} on: {{ convertDate(match.datetime) }}</div>
+          <div class='text-center'>
+            {{ match.location }} at {{ match.venue }} on: <br />{{ convertDate(match.datetime) }}
+            ({{ match.status }})
+          </div>
+          
         </h5>
       </div>
     </div>
@@ -43,6 +47,7 @@ var matchCard = Vue.component('match-card', {
           <button 
             class='btn btn-info' 
             id="show-modal" 
+            v-if="match.status == 'completed'"
             v-on:click="$emit('open-match-modal', {
               'fifa_id': match.fifa_id, 
               'code': match.home_team.code, 
@@ -61,6 +66,7 @@ var matchCard = Vue.component('match-card', {
           <button 
             class='btn btn-info' 
             id="show-modal" 
+            v-if="match.status == 'completed'"
             v-on:click="$emit('open-match-modal', {
               'fifa_id': match.fifa_id, 
               'code': match.away_team.code, 
@@ -257,10 +263,10 @@ var app = new Vue({
       return moment(date).format('dddd, YYYY-MM-DD');
     },
     nextDate: function() {
-      this.date = moment(this.date).add(1, 'days')
+      this.date = moment(this.date).add(1, 'days').toDate();
     },
     prevDate: function() {
-      this.date = moment(this.date).subtract(1, 'days')
+      this.date = moment(this.date).subtract(1, 'days').toDate();
     }
   },
   components: {
