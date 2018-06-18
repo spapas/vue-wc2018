@@ -22,7 +22,6 @@ var matchCard = Vue.component('match-card', {
           <h4 >
             {{ match.home_team.country }} 
             <img class='pb-2' v-bind:src="getFlag(match.home_team.code)" v-bind:alt="match.home_team.code" v-bind:title="match.home_team.code">
-            
           </h4>
         </div>
       </div>
@@ -41,6 +40,17 @@ var matchCard = Vue.component('match-card', {
           <h2>
             {{ match.home_team.goals}}
           </h2>
+          <button 
+            class='btn btn-info' 
+            id="show-modal" 
+            v-on:click="$emit('open-match-modal', {
+              'fifa_id': match.fifa_id, 
+              'code': match.home_team.code, 
+              'name': match.home_team.country, 
+              'home': match.home_team.country, 
+              'away': match.away_team.country
+            })"
+          >More ...</button>
         </div>
       </div>
       <div class='col'>
@@ -48,6 +58,17 @@ var matchCard = Vue.component('match-card', {
           <h2>
             {{ match.away_team.goals}}
           </h2>
+          <button 
+            class='btn btn-info' 
+            id="show-modal" 
+            v-on:click="$emit('open-match-modal', {
+              'fifa_id': match.fifa_id, 
+              'code': match.away_team.code, 
+              'name': match.away_team.country, 
+              'home': match.home_team.country, 
+              'away': match.away_team.country
+            })"
+          >More ...</button>
         </div>
       </div>
     </div>
@@ -121,26 +142,17 @@ var groupCard = Vue.component('group-card', {
   }
 });
 
-Vue.component("modal", {
-  template: `
-  <div class="modal fade" id="myModal" role="dialog">
-      <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Modal Header</h4>
-          </div>
-          <div class="modal-body">
-            <p>This is a small modal.</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-  </div>
-  `
-  });
+var modalComponent = Vue.component('modal', {
+  props: ['modal-info'],
+  data: function () {
+    return {
+      loading: true,
+      statistics: {}
+    }
+  },
+  
+  template: '#modal-template'
+})
 
 var app = new Vue({
   el: '#app',
@@ -149,6 +161,7 @@ var app = new Vue({
     allMatches: [],
     groupResults: [],
     date: new Date(),
+    showModalMatch: null
   },
   computed: {
     selectedMatches: function() {
@@ -170,6 +183,12 @@ var app = new Vue({
     this.getGroupResults();
   },
   methods: {
+    openMatchModal: function (modalInfo) {
+      console.log("HI")
+      console.log(modalInfo)
+      this.showModalMatch = modalInfo
+      this.loadStats()
+    },  
     getTodayMatches: function() {
       var that = this;
       
@@ -188,6 +207,32 @@ var app = new Vue({
       }).then(function(tm) {
         console.log(tm)
         that.allMatches = tm;
+      });
+    },
+    loadStats: function() {
+      console.log(this.modalInfo)
+      var that = this;
+
+      fetch(countryMatchesURL+that.showModalMatch.code).then(function(response) {
+        return response.json();
+      }).then(function(tm) {
+        var match = tm.filter(function(x) {
+          return x.fifa_id == that.showModalMatch.fifa_id;
+        })[0]
+        console.log("match is ", match)
+        if(match.home_team.code == that.showModalMatch.code) {
+          that.showModalMatch = Object.assign(
+            {}, that.showModalMatch, 
+            {'events': match.home_team_events},
+            {'statistics': match.home_team_statistics},
+          )
+        } else {
+          that.showModalMatch = Object.assign(
+            {}, that.showModalMatch, 
+            {'events': match.away_team_events},
+            {'statistics': match.away_team_statistics},
+          )
+        }
       });
     },
 
