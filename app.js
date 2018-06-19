@@ -175,7 +175,6 @@ var app = new Vue({
       return this.allMatches.filter(function(m) {
         
         if (moment(m.datetime) > moment(that.date).hours(0).minutes(0) && moment(m.datetime) < moment(that.date).add(1, 'days').hours(0).minutes(0)) {
-          console.log(m.datetime)
           return true;
         }
       }).sort(function(a, b) {
@@ -190,8 +189,6 @@ var app = new Vue({
   },
   methods: {
     openMatchModal: function (modalInfo) {
-      console.log("HI")
-      console.log(modalInfo)
       this.showModalMatch = modalInfo
       this.loadStats()
     },  
@@ -201,7 +198,6 @@ var app = new Vue({
       fetch(todayMatchesURL).then(function(response) {
         return response.json();
       }).then(function(tm) {
-        console.log(tm)
         that.todayMatches = tm;
       });
     },
@@ -211,12 +207,10 @@ var app = new Vue({
       fetch(allMatchesURL).then(function(response) {
         return response.json();
       }).then(function(tm) {
-        console.log(tm)
         that.allMatches = tm;
       });
     },
     loadStats: function() {
-      console.log(this.modalInfo)
       var that = this;
 
       fetch(countryMatchesURL+that.showModalMatch.code).then(function(response) {
@@ -225,7 +219,6 @@ var app = new Vue({
         var match = tm.filter(function(x) {
           return x.fifa_id == that.showModalMatch.fifa_id;
         })[0]
-        console.log("match is ", match)
         if(match.home_team.code == that.showModalMatch.code) {
           that.showModalMatch = Object.assign(
             {}, that.showModalMatch, 
@@ -248,7 +241,6 @@ var app = new Vue({
       fetch(groupResultsURL).then(function(response) {
         return response.json();
       }).then(function(tm) {
-        console.log(tm)
         that.groupResults = tm;
       });
     },
