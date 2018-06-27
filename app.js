@@ -1,7 +1,7 @@
-var allMatchesURL = 'https://world-cup-json.herokuapp.com/matches'
-var todayMatchesURL = 'https://world-cup-json.herokuapp.com/matches/today'
-var groupResultsURL = 'https://world-cup-json.herokuapp.com/teams/group_results'
-var countryMatchesURL = 'https://world-cup-json.herokuapp.com/matches/country?fifa_code='
+var allMatchesURL = 'https://worldcup.sfg.io/matches'
+var todayMatchesURL = 'https://worldcup.sfg.io/matches/today'
+var groupResultsURL = 'https://worldcup.sfg.io/teams/group_results'
+var countryMatchesURL = 'https://worldcup.sfg.io/matches/country?fifa_code='
 
 var matchCard = Vue.component('match-card', {
   props: ['match'],
@@ -97,7 +97,6 @@ var groupCard = Vue.component('group-card', {
   template: `<div class='col-md-6'>
     <div class="card group-card ">
       <div class="card-body">
-       
         <h3 class="card-title text-center">Group {{ group.letter }}</h3>
         <p class="card-text">
           <table class='table table-sm table-hover'>
@@ -117,21 +116,21 @@ var groupCard = Vue.component('group-card', {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="team in group.teams">
+              <tr v-for="team in group.ordered_teams ">
                 <td>
                   
-                  <img class='pb-2' v-bind:src="getFlag(team.team.fifa_code)" v-bind:alt="team.team.fifa_code" v-bind:title="team.team.fifa_code">
-                  {{ team.team.country }}
+                  <img class='pb-2' v-bind:src="getFlag(team.fifa_code)" v-bind:alt="team.fifa_code" v-bind:title="team.fifa_code">
+                  {{ team.country }}
                 </td>
-                <td>{{ team.team.points }}</td>
-                <td>{{ team.team.wins }}</td>
-                <td>{{ team.team.draws }}</td>
-                <td>{{ team.team.losses }}</td>
-                <td>{{ team.team.goals_for }}</td>
-                <td>{{ team.team.goals_against }}</td>
-                <!--
-                <td>{{ team.team.games_played }}</td>
-                <td>{{ team.team.goal_differential }}</td>
+                <td>{{ team.points }}</td>
+                <td>{{ team.wins }}</td>
+                <td>{{ team.draws }}</td>
+                <td>{{ team.losses }}</td>
+                <td>{{ team.goals_for }}</td>
+                <td>{{ team.goals_against }}</td>
+                <!--       .
+                <td>{{ team.games_played }}</td>
+                <td>{{ team.goal_differential }}</td>
                 -->
               </tr>
             </tbody>

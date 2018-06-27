@@ -167,8 +167,8 @@
         <div class='row'>
           <group-card 
             v-for="group in groupResults"
-            v-bind:key="group.group.id"
-            v-bind:group="group.group"></group-card>
+            v-bind:key="group.id"
+            v-bind:group="group"></group-card>
         </div>
         
         <modal v-if="showModalMatch" @close="showModalMatch=null" v-bind:modal-info="showModalMatch"></modal>
